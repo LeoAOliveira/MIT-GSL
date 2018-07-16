@@ -1,0 +1,16 @@
+//
+//  NotificationNameExtension.swift
+//  MIT GSL
+//
+//  Created by Leonardo Oliveira on 15/07/2018.
+//  Copyright © 2018 Leonardo Oliveira. All rights reserved.
+//
+
+import Foundation
+
+extension Notification.Name{
+    
+    static let saveDate = Notification.Name("saveDate")
+    static let birthCountry = Notification.Name("birthCountry")
+    static let city = Notification.Name("city")
+}
