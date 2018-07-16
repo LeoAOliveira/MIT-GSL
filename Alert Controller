@@ -1,0 +1,21 @@
+//
+//  AlertController.swift
+//  MIT GSL
+//
+//  Created by Leonardo Oliveira on 13/07/2018.
+//  Copyright © 2018 Leonardo Oliveira. All rights reserved.
+//
+
+import UIKit
+
+class AlertController{
+    
+    static func showAlert(_inViewCOntroller: UIViewController, title: String, message: String){
+        
+        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        let action = UIAlertAction(title: "OK", style: .default, handler: nil)
+        alert.addAction(action)
+        _inViewCOntroller.present(alert, animated: true, completion: nil)
+        
+    }
+}
