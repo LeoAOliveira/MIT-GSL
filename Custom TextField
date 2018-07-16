@@ -1,0 +1,101 @@
+//
+//  CustomTextField.swift
+//  MIT GSL
+//
+//  Created by Leonardo Oliveira on 12/07/2018.
+//  Copyright © 2018 Leonardo Oliveira. All rights reserved.
+//
+
+import UIKit
+/** extension to UIColor to allow setting the color
+ value by hex value */
+extension UIColor {
+    convenience init(red: Int, green: Int, blue: Int) {
+        /** Verify that we have valid values */
+        assert(red >= 0 && red <= 255, "Invalid red component")
+        assert(green >= 0 && green <= 255, "Invalid green component")
+        assert(blue >= 0 && blue <= 255, "Invalid blue component")
+        
+        self.init(red: CGFloat(red) / 255.0, green: CGFloat(green) / 255.0, blue: CGFloat(blue) / 255.0, alpha: 1.0)
+    }
+    
+    /** Initializes and sets color by hex value */
+    convenience init(netHex:Int) {
+        self.init(red:(netHex >> 16) & 0xff, green:(netHex >> 8) & 0xff, blue:netHex & 0xff)
+    }
+    
+}
+
+@IBDesignable
+class CustomTextField: UITextField {
+    
+    var textFont = UIFont(name: "Avenir Next", size: 17.0)
+    
+    override func draw(_ rect: CGRect) {
+        // self.layer.masksToBounds = false
+        // self.layer.cornerRadius = 3.0
+        //self.tintColor = tintCol
+        //self.textColor = fontCol
+        // self.layer.borderWidth = 1
+        // self.layer.borderColor = UIColor(red: 255, green: 255, blue: 255).cgColor
+        
+        self.layer.shadowColor = UIColor.white.cgColor
+        self.layer.shadowOffset = CGSize(width: 0.0, height: 1.0)
+        self.layer.shadowOpacity = 1.0
+        self.layer.shadowRadius = 0.0
+        
+        if let phText = self.placeholder {
+            self.attributedPlaceholder = NSAttributedString(string: phText, attributes: [NSAttributedStringKey.foregroundColor: UIColor.white])
+            
+        }
+        
+        if let fnt = textFont {
+            self.font = fnt
+        } else {
+            self.font = UIFont(name: "Avenir Next", size: 14.0)
+        }
+    }
+    
+    // Placeholder text
+    override func textRect(forBounds bounds: CGRect) -> CGRect {
+        return bounds.insetBy(dx: 10, dy: 0)
+    }
+    
+    // Editable text
+    override func editingRect(forBounds bounds: CGRect) -> CGRect {
+        return bounds.insetBy(dx: 10, dy: 0)
+    }
+    
+}
+
+@IBDesignable
+class CustomButton1: UIButton {
+    
+    override func draw(_ rect: CGRect) {
+        self.layer.masksToBounds = true
+        self.layer.cornerRadius = 25.0
+        self.layer.borderWidth = 1
+        self.layer.borderColor = UIColor(red: 255, green: 142, blue: 140).cgColor
+    }
+}
+
+@IBDesignable
+class CustomButton2: UIButton {
+    
+    override func draw(_ rect: CGRect) {
+        self.layer.masksToBounds = true
+        self.layer.cornerRadius = 18.0
+        self.layer.borderWidth = 1
+        self.layer.borderColor = UIColor(red: 255, green: 142, blue: 140).cgColor
+    }
+}
+
+@IBDesignable
+class CustomView: UIView {
+    
+    override func draw(_ rect: CGRect) {
+        self.layer.masksToBounds = true
+        self.layer.cornerRadius = 10.0
+    }
+}
+
