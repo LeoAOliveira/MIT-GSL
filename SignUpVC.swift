@@ -1,0 +1,149 @@
+//
+//  SignUpVC.swift
+//  MIT GSL
+//
+//  Created by Leonardo Oliveira on 12/07/2018.
+//  Copyright © 2018 Leonardo Oliveira. All rights reserved.
+//
+
+import UIKit
+import Firebase
+import FirebaseAuth
+
+class SignUpVC: UIViewController {
+    
+    
+    @IBOutlet weak var fullNameTextField: CustomTextField!
+    @IBOutlet weak var emailTextField: CustomTextField!
+    @IBOutlet weak var passwordTextField: CustomTextField!
+    @IBOutlet weak var createAccountBtn: CustomButton1!
+    @IBOutlet weak var termsBtn: UIButton!
+    @IBOutlet weak var signInBtn: UIButton!
+    
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+
+        
+    }
+
+    
+    override func didReceiveMemoryWarning() {
+        super.didReceiveMemoryWarning()
+        // Dispose of any resources that can be recreated.
+    }
+    
+    
+    @IBAction func createAccountBtnPressed(_ sender: Any) {
+        
+        guard let username = fullNameTextField.text,
+        username != "",
+        let email = emailTextField.text,
+        email != "",
+        let password = passwordTextField.text,
+        password != ""
+            else{
+                AlertController.showAlert(_inViewCOntroller: self, title: "Missing info", message: "Please fill out all fields")
+                return
+        }
+        
+        Auth.auth().createUser(withEmail: email, password: password) { (user, error) in
+            
+            guard error == nil else{
+                AlertController.showAlert(_inViewCOntroller: self, title: "Error", message: error!.localizedDescription)
+                return
+            }
+            
+            
+            // self.showSpinner {}
+            let changeRequest = Auth.auth().currentUser?.createProfileChangeRequest()
+            changeRequest?.displayName = username
+            
+            // Commit profile changes to server
+            changeRequest?.commitChanges() { (error) in
+                
+                // self.hideSpinner {}
+                
+                if let error = error {
+                    AlertController.showAlert(_inViewCOntroller: self, title: "Error", message: error.localizedDescription)
+                    return
+                }
+               
+                self.performSegue(withIdentifier: "signUpSegue", sender: nil)
+            }
+            
+            /*guard let user = user else {return}
+            // print(user.email ?? "MISSIGN EMAIL")
+            // print(user.uid)
+            
+            let changeRequest = Auth.auth().user.createProfileChangeRequest()
+            changeRequest?.displayName = username
+            changeRequest.commitChange(completion: { (error) in
+                guard error == nil else{
+                    AlertController.show(self, title: "Error", message: error!.localizedDescription)
+                    return
+                }
+            })*/
+            
+        }
+        
+    }
+    
+    
+    @IBAction func termsBtnPressed(_ sender: Any) {
+    }
+    
+    
+    @IBAction func signInBtnPressed(_ sender: Any) {
+        
+        self.performSegue(withIdentifier: "signInSegue", sender: nil)
+    }
+    
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        
+        if segue.identifier == "signUpSegue"{
+            
+            if let destVC = segue.destination as? ProfileVC{
+                
+                destVC.fullName = fullNameTextField.text
+                destVC.email = emailTextField.text
+            }
+        }
+    }
+    
+    
+    
+}
+
+
+
+
+/*
+ if emailTextField.text == nil{
+ 
+ emailTextField.text = ""
+ emailTextField.placeholder = "EMAIL"
+ 
+ } else if passwordTextField == nil{
+ 
+ passwordTextField.text = ""
+ passwordTextField.placeholder = "PASSWORD"
+ 
+ }else if fullNameTextField == nil{
+ 
+ passwordTextField.text = ""
+ passwordTextField.placeholder = "FULL NAME"
+ 
+ 
+ }else if emailTextField != nil && passwordTextField != nil && fullNameTextField != nil{
+ 
+ 
+ 
+ }
+ 
+ */
+
+
+
+

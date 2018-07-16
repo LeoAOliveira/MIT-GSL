@@ -1,0 +1,167 @@
+//
+//  ProfileVC.swift
+//  MIT GSL
+//
+//  Created by Leonardo Oliveira on 13/07/2018.
+//  Copyright © 2018 Leonardo Oliveira. All rights reserved.
+//
+
+import UIKit
+import Firebase
+
+class ProfileVC: UIViewController {
+
+    @IBOutlet weak var birthDateBtn: UIButton!
+    @IBOutlet weak var birthCountryBtn: UIButton!
+    @IBOutlet weak var cityBtn: UIButton!
+    @IBOutlet weak var idTextField: CustomTextField!
+    @IBOutlet weak var phoneTextField: CustomTextField!
+    @IBOutlet weak var emergencyBtn: CustomTextField!
+    @IBOutlet weak var nextBtn: CustomButton1!
+    
+    
+    var fullName: String!
+    var email: String!
+    
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        NotificationCenter.default.addObserver(forName: .saveDate, object: nil, queue: OperationQueue.main) { (notification) in
+            let birthDate  = notification.object as! BirthDateVC
+            self.birthDateBtn.setTitle("  \(birthDate.formattedDate)", for: .normal)
+            
+        }
+        
+        NotificationCenter.default.addObserver(forName: .birthCountry, object: nil, queue: OperationQueue.main) { (notification) in
+            let birthCountry  = notification.object as! BirthCountryVC
+            self.birthCountryBtn.setTitle("  \(birthCountry.selected)", for: .normal)
+        }
+        
+        NotificationCenter.default.addObserver(forName: .city, object: nil, queue: OperationQueue.main) { (notification) in
+            let city  = notification.object as! CityVC
+            self.cityBtn.setTitle("  \(city.selected)", for: .normal)
+        }
+        
+    }
+
+    
+    override func didReceiveMemoryWarning() {
+        super.didReceiveMemoryWarning()
+        // Dispose of any resources that can be recreated.
+    }
+    
+    @IBAction func birthDatePressed(_ sender: Any) {
+        self.performSegue(withIdentifier: "birthDateSegue", sender: nil)
+    }
+    
+    @IBAction func birthCountryBtnPressed(_ sender: Any) {
+        self.performSegue(withIdentifier: "birthCountrySegue", sender: nil)
+    }
+    
+    @IBAction func cityBtnPressed(_ sender: Any) {
+        self.performSegue(withIdentifier: "citySegue", sender: nil)
+    }
+    
+    
+}
+
+
+// BIRTH DATE POP UP
+
+class BirthDateVC: UIViewController{
+    
+    @IBOutlet weak var datePicker: UIDatePicker!
+    
+    var formattedDate: String{
+        get{
+            let formatter = DateFormatter()
+            formatter.dateFormat = "dd/MM/yyyy"
+            return formatter.string(from: datePicker.date)
+        }
+    }
+    
+    @IBAction func selectBtnPressed(_ sender: Any) {
+        
+        NotificationCenter.default.post(name: NSNotification.Name.saveDate, object: self)
+        
+        dismiss(animated: true, completion: nil)
+        
+    }
+}
+
+
+// BIRTH COUNTRY POP UP
+
+class BirthCountryVC: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource {
+    
+    let countries = ["Brazil", "United States", "Other"]
+    
+    var selected = "Brazil"
+    
+    @IBOutlet weak var pickerView: UIPickerView!
+    
+    @IBAction func selectBtnPressed(_ sender: Any) {
+        
+        NotificationCenter.default.post(name: NSNotification.Name.birthCountry, object: self)
+        
+        dismiss(animated: true, completion: nil)
+    }
+    
+    func numberOfComponents(in pickerView: UIPickerView) -> Int {
+        return 1
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
+        return countries[row]
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+        return countries.count
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+        selected = countries[row]
+    }
+    
+}
+
+
+// CITY POP UP
+
+class CityVC: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource {
+    
+    let cities = ["São Paulo", "Other"]
+    
+    var selected = "São Paulo"
+    
+    @IBOutlet weak var pickerView: UIPickerView!
+    
+    @IBAction func selectBtnPressed(_ sender: Any) {
+        
+        NotificationCenter.default.post(name: NSNotification.Name.city, object: self)
+        
+        dismiss(animated: true, completion: nil)
+    }
+    
+    func numberOfComponents(in pickerView: UIPickerView) -> Int {
+        return 1
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
+        return cities[row]
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+        return cities.count
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+        selected = cities[row]
+    }
+    
+}
+
+
+
+
