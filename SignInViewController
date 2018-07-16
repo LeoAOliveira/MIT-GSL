@@ -1,0 +1,73 @@
+//
+//  SignInVC.swift
+//  MIT GSL
+//
+//  Created by Leonardo Oliveira on 13/07/2018.
+//  Copyright © 2018 Leonardo Oliveira. All rights reserved.
+//
+
+import UIKit
+import Firebase
+import FirebaseAuth
+
+class SignInVC: UIViewController {
+
+    @IBOutlet weak var emailTextField: CustomTextField!
+    @IBOutlet weak var passwordTextField: CustomTextField!
+    @IBOutlet weak var enterBtn: CustomButton1!
+    @IBOutlet weak var forgotBtn: UIButton!
+    @IBOutlet weak var signUpBtn: UIButton!
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+
+    }
+    
+    
+    @IBAction func enterBtnPressed(_ sender: Any) {
+        
+        guard let email = emailTextField.text,
+            email != "",
+            let password = passwordTextField.text,
+            password != ""
+            else{
+                AlertController.showAlert(_inViewCOntroller: self, title: "Missing info", message: "Please fill out all fields")
+                return
+        }
+        
+        Auth.auth().signIn(withEmail: email, password: password) { (user, error) in
+            
+            guard error == nil else{
+                AlertController.showAlert(_inViewCOntroller: self, title: "Error", message: error!.localizedDescription)
+                return
+            }
+            
+            guard user != nil else{
+                print("Sign In")
+                return
+            }
+            
+            self.performSegue(withIdentifier: "enterSegue", sender: nil)
+        }
+    }
+    
+    
+    @IBAction func signUpBtnPressed(_ sender: Any) {
+        
+        self.performSegue(withIdentifier: "signUpSegue2", sender: nil)
+    }
+    
+    
+    @IBAction func forgotBtnPressed(_ sender: Any) {
+        
+        
+    }
+    
+    override func didReceiveMemoryWarning() {
+        super.didReceiveMemoryWarning()
+        
+        
+        
+    }
+
+}
